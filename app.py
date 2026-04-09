@@ -332,15 +332,14 @@ div[data-testid="column"]:nth-child(3) div.stButton > button:hover {
 # ============================================================
 @st.cache_resource
 def load_model():
-    base = os.path.dirname(os.path.abspath(__file__))
     model = TFBertForSequenceClassification.from_pretrained(
-        os.path.join(base, "models", "bert_emotion_model"),
-        local_files_only=True
+        "shravani1305/bert-emotion-model"
     )
+
     tokenizer = BertTokenizer.from_pretrained(
-        os.path.join(base, "models", "bert_emotion_tokenizer"),
-        local_files_only=True
+        "shravani1305/bert-emotion-model"
     )
+
     return model, tokenizer
 
 model, tokenizer = load_model()
