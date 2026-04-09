@@ -6,8 +6,13 @@ from transformers import TFBertForSequenceClassification, BertTokenizer
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
-BOOKS_API_KEY = os.getenv("BOOKS_API_KEY")
+# Loading API
+try:
+    BOOKS_API_KEY = st.secrets["BOOKS_API_KEY"]
+except:
+    load_dotenv()
+    BOOKS_API_KEY = os.getenv("BOOKS_API_KEY")
+    
 
 st.set_page_config(page_title="EmotiSense", layout="centered", page_icon="🌸")
 
@@ -332,13 +337,29 @@ div[data-testid="column"]:nth-child(3) div.stButton > button:hover {
 # ============================================================
 @st.cache_resource
 def load_model():
-    model = TFBertForSequenceClassification.from_pretrained(
-        "shravani1305/bert-emotion-model"
-    )
+    try:
+        # 🔥 Try loading from Hugging Face (for deployment)
+        model = TFBertForSequenceClassification.from_pretrained(
+            "shravan i1305/bert-emotion-model"
+        )
 
-    tokenizer = BertTokenizer.from_pretrained(
-        "shravani1305/bert-emotion-model"
-    )
+        tokenizer = BertTokenizer.from_pretrained(
+            "shravan i1305/bert-emotion-tokenizer"
+        )
+
+    except:
+        # 💻 Fallback for local system
+        base = os.path.dirname(os.path.abspath(__file__))
+
+        model = TFBertForSequenceClassification.from_pretrained(
+            os.path.join(base, "models", "bert_emotion_model"),
+            local_files_only=True
+        )
+
+        tokenizer = BertTokenizer.from_pretrained(
+            os.path.join(base, "models", "bert_emotion_tokenizer"),
+            local_files_only=True
+        )
 
     return model, tokenizer
 
