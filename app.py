@@ -480,31 +480,49 @@ def predict(text: str):
 # ============================================================
 def get_books(emotion: str):
     books = []
+    query_map = {
+        "sadness":    "self help motivation",
+        "happiness":  "happy life positivity",
+        "anger":      "calm mindfulness",
+        "love":       "romantic novels",
+        "neutral":    "life philosophy",
+        "fun":        "comedy books",
+        "enthusiasm": "success motivation",
+        "relief":     "peace mindfulness",
+        "surprise":   "thriller mystery",
+        "hate":       "emotional healing",
+        "empty":      "mental health support",
+    }
+    query = query_map.get(emotion, emotion)
+ 
+    # Debug: show key status and URL in sidebar (remove after fixing)
+    with st.sidebar:
+        st.write("🔑 Key loaded:", "✅" if BOOKS_API_KEY else "❌ None")
+        st.write("🔍 Query:", query)
+ 
     try:
-        query_map = {
-            "sadness":    "self help motivation",
-            "happiness":  "happy life positivity",
-            "anger":      "calm mindfulness",
-            "love":       "romantic novels",
-            "neutral":    "life philosophy",
-            "fun":        "comedy books",
-            "enthusiasm": "success motivation",
-            "relief":     "peace mindfulness",
-            "surprise":   "thriller mystery",
-            "hate":       "emotional healing",
-            "empty":      "mental health support",
-        }
-        query = query_map.get(emotion, emotion)
-        url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={BOOKS_API_KEY}&maxResults=6"
-        res = requests.get(url, timeout=8)
+        url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={BOOKS_API_KEY}&maxResults=8"
+        res = requests.get(url, timeout=10)
+ 
+        with st.sidebar:
+            st.write("📡 Status code:", res.status_code)
+ 
         data = res.json()
  
-        for b in data.get("items", []):
+        # Show API error message if any
+        if "error" in data:
+            with st.sidebar:
+                st.error(f"API Error: {data['error']['message']}")
+            return books
+ 
+        items = data.get("items", [])
+        with st.sidebar:
+            st.write("📦 Items returned:", len(items))
+ 
+        for b in items:
             info = b.get("volumeInfo", {})
-            img  = (info.get("imageLinks") or {}).get("thumbnail") or \
-                   (info.get("imageLinks") or {}).get("smallThumbnail")
+            img  = (info.get("imageLinks") or {}).get("thumbnail") or                    (info.get("imageLinks") or {}).get("smallThumbnail")
             if img:
-                # force https so browser doesn't block mixed content
                 img = img.replace("http://", "https://")
                 books.append({
                     "title": info.get("title", "No Title"),
@@ -512,10 +530,14 @@ def get_books(emotion: str):
                 })
             if len(books) == 4:
                 break
-    except Exception as e:
-        st.error(f"Books API error: {e}")
-    return books
  
+        with st.sidebar:
+            st.write("📚 Books with images:", len(books))
+ 
+    except Exception as e:
+        st.error(f"Books API exception: {e}")
+ 
+    return books 
 # ============================================================
 #  UI — HEADER
 # ============================================================
