@@ -501,7 +501,7 @@ def get_books(emotion: str):
         st.write("🔍 Query:", query)
  
     try:
-        url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={BOOKS_API_KEY}&maxResults=8"
+        url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={BOOKS_API_KEY}&maxResults=8&country=US&langRestrict=en" 
         res = requests.get(url, timeout=10)
  
         with st.sidebar:
