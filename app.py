@@ -484,7 +484,7 @@ def get_books(emotion: str):
         "sadness":    "self help motivation",
         "happiness":  "happy life positivity",
         "anger":      "calm mindfulness",
-        "love":       "romantic novels",
+        "love":       "romance",
         "neutral":    "life philosophy",
         "fun":        "comedy books",
         "enthusiasm": "success motivation",
@@ -495,33 +495,17 @@ def get_books(emotion: str):
     }
     query = query_map.get(emotion, emotion)
  
-    # Debug: show key status and URL in sidebar (remove after fixing)
-    with st.sidebar:
-        st.write("🔑 Key loaded:", "✅" if BOOKS_API_KEY else "❌ None")
-        st.write("🔍 Query:", query)
- 
     try:
-        url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={BOOKS_API_KEY}&maxResults=8&country=US&langRestrict=en" 
+        url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={BOOKS_API_KEY}&maxResults=8&country=US&langRestrict=en"
         res = requests.get(url, timeout=10)
- 
-        with st.sidebar:
-            st.write("📡 Status code:", res.status_code)
- 
         data = res.json()
  
-        # Show API error message if any
         if "error" in data:
-            with st.sidebar:
-                st.error(f"API Error: {data['error']['message']}")
             return books
  
-        items = data.get("items", [])
-        with st.sidebar:
-            st.write("📦 Items returned:", len(items))
- 
-        for b in items:
+        for b in data.get("items", []):
             info = b.get("volumeInfo", {})
-            img  = (info.get("imageLinks") or {}).get("thumbnail") or                    (info.get("imageLinks") or {}).get("smallThumbnail")
+            img  = (info.get("imageLinks") or {}).get("thumbnail") or (info.get("imageLinks") or {}).get("smallThumbnail")
             if img:
                 img = img.replace("http://", "https://")
                 books.append({
@@ -531,13 +515,12 @@ def get_books(emotion: str):
             if len(books) == 4:
                 break
  
-        with st.sidebar:
-            st.write("📚 Books with images:", len(books))
+    except Exception:
+        pass
  
-    except Exception as e:
-        st.error(f"Books API exception: {e}")
+    return books
  
-    return books 
+ 
 # ============================================================
 #  UI — HEADER
 # ============================================================
