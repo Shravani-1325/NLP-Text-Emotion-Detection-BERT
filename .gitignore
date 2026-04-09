@@ -1,0 +1,12 @@
+# Ignore env
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Virtual env
+myenv/
+
+# OS files
+.DS_Store
