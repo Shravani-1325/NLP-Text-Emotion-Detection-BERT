@@ -482,28 +482,41 @@ def predict(text: str):
 # ============================================================
 def get_books(emotion: str):
     books = []
+
+    if not BOOKS_API_KEY:
+        st.error("❌ BOOKS_API_KEY not found")
+        return books
+
     try:
         url = f"https://www.googleapis.com/books/v1/volumes?q={emotion}&key={BOOKS_API_KEY}&maxResults=6"
         res = requests.get(url, timeout=8)
+
         data = res.json()
+
+        if "items" not in data:
+            st.warning("⚠️ No books found from API")
+            return books
 
         for b in data.get("items", []):
             info = b.get("volumeInfo", {})
             img  = (info.get("imageLinks") or {}).get("thumbnail") or \
                    (info.get("imageLinks") or {}).get("smallThumbnail")
+
             if img:
-                # force https so browser doesn't block mixed content
                 img = img.replace("http://", "https://")
+
                 books.append({
                     "title": info.get("title", "No Title"),
-                    "img":   img,
+                    "img": img,
                 })
+
             if len(books) == 4:
                 break
+
     except Exception as e:
         st.error(f"Books API error: {e}")
-    return books
 
+    return books
 
 # ============================================================
 #  UI — HEADER
