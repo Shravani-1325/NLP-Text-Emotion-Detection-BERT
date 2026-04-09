@@ -340,11 +340,11 @@ def load_model():
     try:
         # 🔥 Try loading from Hugging Face (for deployment)
         model = TFBertForSequenceClassification.from_pretrained(
-            "shravan i1305/bert-emotion-model"
+            "shravani1305/bert-emotion-model"
         )
 
         tokenizer = BertTokenizer.from_pretrained(
-            "shravan i1305/bert-emotion-tokenizer"
+            "shravani1305/bert-emotion-tokenizer"
         )
 
     except:
