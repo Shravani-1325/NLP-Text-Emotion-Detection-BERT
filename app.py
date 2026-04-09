@@ -9,10 +9,8 @@ from dotenv import load_dotenv
 # Loading API
 try:
     BOOKS_API_KEY = st.secrets["BOOKS_API_KEY"]
-except:
-    load_dotenv()
-    BOOKS_API_KEY = os.getenv("BOOKS_API_KEY")
-    
+except Exception:
+    BOOKS_API_KEY = os.getenv("BOOKS_API_KEY")    
 
 st.set_page_config(page_title="EmotiSense", layout="centered", page_icon="🌸")
 
@@ -338,7 +336,7 @@ div[data-testid="column"]:nth-child(3) div.stButton > button:hover {
 @st.cache_resource
 def load_model():
     try:
-        # 🔥 Try loading from Hugging Face (for deployment)
+        
         model = TFBertForSequenceClassification.from_pretrained(
             "shravani1305/bert-emotion-model"
         )
