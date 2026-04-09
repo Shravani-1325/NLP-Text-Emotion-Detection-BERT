@@ -482,42 +482,42 @@ def predict(text: str):
 # ============================================================
 def get_books(emotion: str):
     books = []
-
-    if not BOOKS_API_KEY:
-        st.error("❌ BOOKS_API_KEY not found")
-        return books
-
     try:
-        url = f"https://www.googleapis.com/books/v1/volumes?q={emotion}&key={BOOKS_API_KEY}&maxResults=6"
+        query_map = {
+            "sadness":    "self help motivation",
+            "happiness":  "happy life positivity",
+            "anger":      "calm mindfulness",
+            "love":       "romantic novels",
+            "neutral":    "life philosophy",
+            "fun":        "comedy books",
+            "enthusiasm": "success motivation",
+            "relief":     "peace mindfulness",
+            "surprise":   "thriller mystery",
+            "hate":       "emotional healing",
+            "empty":      "mental health support",
+        }
+        query = query_map.get(emotion, emotion)
+        url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={BOOKS_API_KEY}&maxResults=6"
         res = requests.get(url, timeout=8)
-
         data = res.json()
-
-        if "items" not in data:
-            st.warning("⚠️ No books found from API")
-            return books
-
+ 
         for b in data.get("items", []):
             info = b.get("volumeInfo", {})
             img  = (info.get("imageLinks") or {}).get("thumbnail") or \
                    (info.get("imageLinks") or {}).get("smallThumbnail")
-
             if img:
+                # force https so browser doesn't block mixed content
                 img = img.replace("http://", "https://")
-
                 books.append({
                     "title": info.get("title", "No Title"),
-                    "img": img,
+                    "img":   img,
                 })
-
             if len(books) == 4:
                 break
-
     except Exception as e:
         st.error(f"Books API error: {e}")
-
     return books
-
+ 
 # ============================================================
 #  UI — HEADER
 # ============================================================
