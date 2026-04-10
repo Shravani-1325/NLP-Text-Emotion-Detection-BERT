@@ -346,7 +346,7 @@ def load_model():
         )
 
     except:
-        # 💻 Fallback for local system
+      
         base = os.path.dirname(os.path.abspath(__file__))
 
         model = TFBertForSequenceClassification.from_pretrained(
@@ -526,7 +526,7 @@ def get_books(emotion: str):
 # ============================================================
 st.markdown("""
 <div class="header-glass">
-    <h1>🌸 EmotiSense</h1>
+    <div class="header-title">🌸 EmotiSense</div>
     <div class="tagline">Feel. Understand. Heal.</div>
     <div class="subdesc">EmotiSense is an AI-powered Text Emotion Analysis Detection Web App that analyzes user text using a fine-tuned BERT model and recommends mood-based books and motivational quotes through a modern Streamlit interface.</div>
 </div>
