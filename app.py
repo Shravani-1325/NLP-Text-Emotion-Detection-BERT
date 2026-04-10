@@ -113,9 +113,10 @@ footer { visibility: hidden; }
 }
 
 /* --------------WHATS IN YOUR MIND--------------*/
-.st-emotion-cache-rsr9ey p{
-    font-size: large;
-}
+.st-emotion-cache-sh2krr p {
+    word-break: break-word;
+    margin-bottom: 0px;
+    font-size: 17px;
 
 /* ---------- TEXTAREA LABEL ---------- */
 .stTextArea > label {
