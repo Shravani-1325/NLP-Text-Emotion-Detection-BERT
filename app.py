@@ -85,7 +85,7 @@ footer { visibility: hidden; }
     text-align: center;
 }
 
-.header-glass h1 {
+.header-glass .header-title {
     font-family: 'Playfair Display', serif;
     font-size: 2.8rem;
     font-weight: 700;
@@ -93,8 +93,10 @@ footer { visibility: hidden; }
     letter-spacing: 1px;
     line-height: 1.15;
     margin: 0 0 6px;
+    user-select: none;
+    -webkit-user-select: none;
+    pointer-events: none;
 }
-
 .header-glass .tagline {
     font-size: 1.3rem;
     font-weight: 700;
